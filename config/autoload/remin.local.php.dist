@@ -1,0 +1,11 @@
+<?php
+
+return [
+    'tervel' => [
+        'numero_territorios' => 64,
+        'admin' => [
+            'user' => 'adminusername',
+            'pass' => 'adminpassword',
+        ],
+    ],
+];

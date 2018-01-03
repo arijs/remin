@@ -1,0 +1,1 @@
+php ../composer/composer.phar "$@"

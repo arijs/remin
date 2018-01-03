@@ -1,0 +1,38 @@
+<?php $this->layout('layout::default', ['title' => 'Home']) ?>
+
+<div class="row">
+	<div class="col-md-offset-4 col-md-4">
+<?php if (isset($error)): ?>
+		<div class="panel panel-danger">
+			<div class="panel-heading">Erro</div>
+			<div class="panel-body">
+				<?= $this->e($error) ?>
+			</div>
+		</div>
+<?php endif; ?>
+		<div class="panel panel-default">
+			<div class="panel-heading">Login</div>
+			<div class="panel-body">
+				<form class="form-horizontal" action="/login" method="post">
+					<div class="form-group">
+						<label class="col-md-2 control-label">Usuário</label>
+						<div class="col-md-10">
+							<input type="text" class="form-control" name="username" value="<?= isset($username) ? $this->e($username) : '' ?>"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">Senha</label>
+						<div class="col-md-10">
+							<input type="password" class="form-control" name="password"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-offset-2 col-md-10">
+							<button type="submit">Entrar</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

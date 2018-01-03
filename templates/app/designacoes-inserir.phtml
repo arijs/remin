@@ -1,0 +1,29 @@
+<?php
+$this->layout('layout::default', [
+    'title' => 'Designações - Inserir',
+    'authentication' => isset($authentication) ? $authentication : null,
+])
+?>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group">
+            <a class="list-group-item" href="/">Início</a>
+            <a class="list-group-item" href="/irmaos">Irmãos</a>
+            <a class="list-group-item" href="/saidas">Saídas</a>
+            <a class="list-group-item" href="/designacoes">Designações</a>
+        </div>
+    </div>
+</div>
+
+<p>Nova designação:</p>
+
+<pre>
+	POST::
+<?php print_r($post) ?>
+
+	Designação::
+<?php print_r($designacao) ?>
+</pre>
+
+<p><a href="/designacoes">Voltar para a lista</a></p>

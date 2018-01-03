@@ -1,0 +1,37 @@
+<?php
+$this->layout('layout::default', [
+    'title' => 'Irmãos',
+    'authentication' => isset($authentication) ? $authentication : null,
+])
+?>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group">
+            <a class="list-group-item" href="/">Início</a>
+            <a class="list-group-item" href="/irmaos">Irmãos</a>
+            <a class="list-group-item" href="/saidas">Saídas</a>
+            <a class="list-group-item" href="/designacoes">Designações</a>
+        </div>
+    </div>
+</div>
+
+<p>Total: <?=$this->e($result['count'])?></p>
+
+<ul>
+<?php foreach ($list as $irmao):
+	$esc_id = $this->e($irmao->irmao_id);
+	$esc_nome = $this->e($irmao->irmao_nome);
+?>
+	<li>
+		<a href="/irmaos/editar/<?= $esc_id ?>">(editar)</a>
+		<a href="/irmaos/remover/<?= $esc_id ?>">(remover)</a>
+		(<?= $esc_id ?>) <?= $esc_nome ?>
+	</li>
+<?php endforeach; ?>
+</ul>
+
+<form action="/irmaos/inserir" method="post">
+	<input type="text" name="nome" />
+	<button type="submit">inserir</button>
+</form>
