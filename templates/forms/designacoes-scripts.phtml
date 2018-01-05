@@ -12,6 +12,10 @@
 			('00'+d).substr(-2)
 		].join('-');
 	}
+	function parseDate(str) {
+		var mat = str.match(/(\d+)-(\d+)-(\d+)/i);
+		return mat ? new Date(+mat[1], +mat[2]-1, +mat[3]) : void 0;
+	}
 	$('.data-entrega').datepicker({
 		title: 'Entrega',
 		toggleActive: true,
@@ -40,77 +44,169 @@
 			.find('.data-picker-hidden')
 			.prop('value', date ? formatDate(date) : '');
 	});
-	var terr_bts = $('.territorio-botoes button');
+	var terr_bts = $('.territorio-botoes button:not([disabled])');
 	var terr_inp = $('.territorio-botoes input');
 	terr_bts.on('click', function(ev) {
 		terr_bts.removeClass('btn-primary').addClass('btn-default');
 		$(this).removeClass('btn-default').addClass('btn-primary');
 		terr_inp.prop('value', $(this).prop('value'));
 	});
-	var irmaos_bts = $('.irmaos-botoes button');
+	function addRowIrmao(bt) {
+		bt.prop('disabled', true);
+		var elHidden = $('<input/>').prop({
+			type: 'hidden',
+			name: 'irmaos_id[]',
+			value: bt.prop('value')
+		});
+		var elName = $('<p/>').addClass('form-control-static').text(bt.text());
+		var elComentario = $('<input/>').addClass('form-control').prop({
+			type: 'text',
+			name: 'irmaos_comentario[]'
+		});
+		var elRemover = $('<button/>').addClass('btn btn-danger').text('remover').on('click', function(ev) {
+			bt.prop('disabled', false);
+			elRow.remove();
+			elRow = void 0;
+		});
+		var elRow = $('<tr/>').append([
+			$('<td/>').append([
+				elHidden[0],
+				elName[0]
+			])[0],
+			$('<td/>').append([
+				$('<div/>').addClass('form-group').append([
+					$('<div/>').addClass('input-group').append([
+						elComentario[0],
+						$('<div/>').addClass('input-group-btn').append([
+							elRemover[0]
+						])[0]
+					])[0]
+				])[0]
+			])[0]
+		]);
+		$('.irmaos-botoes table').append(elRow);
+		return {
+			elRow: elRow,
+			elHidden: elHidden,
+			elName: elName,
+			elComentario: elComentario,
+			elRemover: elRemover
+		};
+	}
+	var irmaos_bts = $('.irmaos-botoes button:not([disabled])');
 	irmaos_bts.on('click', function(ev) {
-		var bt = $(this);
+		addRowIrmao($(this));
+	});
+	function addRowSaida(bt) {
 		bt.prop('disabled', true);
-		var row = $('<tr/>').append([
+		var elHidden = $('<input/>').prop({
+			type: 'hidden',
+			name: 'saidas_id[]',
+			value: bt.prop('value')
+		});
+		var elName = $('<p/>').addClass('form-control-static').text(bt.text());
+		var elComentario = $('<input/>').addClass('form-control').prop({
+			type: 'text',
+			name: 'saidas_comentario[]'
+		});
+		var elRemover = $('<button/>').addClass('btn btn-danger').text('remover').on('click', function(ev) {
+			bt.prop('disabled', false);
+			elRow.remove();
+			elRow = void 0;
+		});
+		var elRow = $('<tr/>').append([
 			$('<td/>').append([
-				$('<input/>').prop({
-					type: 'hidden',
-					name: 'irmaos_id[]',
-					value: $(this).prop('value')
-				})[0],
-				$('<p/>').addClass('form-control-static').text($(this).text())[0]
+				elHidden[0],
+				elName[0]
 			])[0],
 			$('<td/>').append([
 				$('<div/>').addClass('form-group').append([
 					$('<div/>').addClass('input-group').append([
-						$('<input/>').addClass('form-control').prop({
-							type: 'text',
-							name: 'irmaos_comentario[]'
-						})[0],
+						elComentario[0],
 						$('<div/>').addClass('input-group-btn').append([
-							$('<button/>').addClass('btn btn-danger').text('remover').on('click', function(ev) {
-								bt.prop('disabled', false);
-								row.remove();
-								row = void 0;
-							})[0]
+							elRemover[0]
 						])[0]
 					])[0]
 				])[0]
 			])[0]
 		]);
-		$('.irmaos-botoes table').append(row);
-	});
-	var saidas_bts = $('.saidas-botoes button');
+		$('.saidas-botoes table').append(elRow);
+		return {
+			elRow: elRow,
+			elHidden: elHidden,
+			elName: elName,
+			elComentario: elComentario,
+			elRemover: elRemover
+		};
+	}
+	var saidas_bts = $('.saidas-botoes button:not([disabled])');
 	saidas_bts.on('click', function(ev) {
-		var bt = $(this);
-		bt.prop('disabled', true);
-		var row = $('<tr/>').append([
-			$('<td/>').append([
-				$('<input/>').prop({
-					type: 'hidden',
-					name: 'saidas_id[]',
-					value: $(this).prop('value')
-				})[0],
-				$('<p/>').addClass('form-control-static').text($(this).text())[0]
-			])[0],
-			$('<td/>').append([
-				$('<div/>').addClass('form-group').append([
-					$('<div/>').addClass('input-group').append([
-						$('<input/>').addClass('form-control').prop({
-							type: 'text',
-							name: 'saidas_comentario[]'
-						})[0],
-						$('<div/>').addClass('input-group-btn').append([
-							$('<button/>').addClass('btn btn-danger').text('remover').on('click', function(ev) {
-								bt.prop('disabled', false);
-								row.remove();
-								row = void 0;
-							})[0]
-						])[0]
-					])[0]
-				])[0]
-			])[0]
-		]);
-		$('.saidas-botoes table').append(row);
+		addRowSaida($(this));
 	});
+<?php if (isset($designacao)): ?>
+	function formEdit(desig) {
+		console.log(desig);
+		var desigTerr = desig.designacao_territorio;
+		if (desigTerr) {
+			var terrCount = terr_bts.length;
+			for ( var i = 0; i < terrCount; i++ ) {
+				var terrBt = terr_bts.eq(i);
+				if (terrBt.prop('value') == desigTerr) {
+					terrBt.trigger('click');
+					break;
+				}
+			}
+		}
+		var desigEntrega = desig.designacao_entrega;
+		var desigDevolucao = desig.designacao_devolucao;
+		var dtEntrega = parseInt(desigEntrega) && parseDate(desigEntrega);
+		var dtDevolucao = parseInt(desigDevolucao) && parseDate(desigDevolucao);
+		$('.data-entrega')
+			.datepicker('update', dtEntrega || '')
+			.trigger({
+				type: 'changeDate',
+				date: dtEntrega
+			});
+		$('.data-devolucao')
+			.datepicker('update', dtDevolucao || '')
+			.trigger({
+				type: 'changeDate',
+				date: dtDevolucao
+			});
+		var desigIrmaosList = desig.designacaoIrmaos.slice();
+		var desigIrmaosCount = desigIrmaosList.length;
+		var irmaosCount = irmaos_bts.length;
+		for ( var i = 0; i < irmaosCount; i++ ) {
+			var irmaoBt = irmaos_bts.eq(i);
+			for ( var j = 0; j < desigIrmaosCount; j++ ) {
+				var desigIrmao = desigIrmaosList[j];
+				if (irmaoBt.prop('value') == desigIrmao.irmao_id) {
+					var rowIrmao = addRowIrmao(irmaoBt);
+					rowIrmao.elComentario.prop('value', desigIrmao.deir_comentario || '');
+					desigIrmaosList.splice(j, 1);
+					desigIrmaosCount--;
+				}
+			}
+			if (!desigIrmaosCount) break;
+		}
+		var desigSaidasList = desig.designacaoSaidas.slice();
+		var desigSaidasCount = desigSaidasList.length;
+		var saidasCount = saidas_bts.length;
+		for ( var i = 0; i < saidasCount; i++ ) {
+			var saidaBt = saidas_bts.eq(i);
+			for ( var j = 0; j < desigSaidasCount; j++ ) {
+				var desigSaida = desigSaidasList[j];
+				if (saidaBt.prop('value') == desigSaida.saida_id) {
+					var rowSaida = addRowSaida(saidaBt);
+					rowSaida.elComentario.prop('value', desigSaida.desa_comentario || '');
+					desigSaidasList.splice(j, 1);
+					desigSaidasCount--;
+				}
+			}
+			if (!desigSaidasCount) break;
+		}
+		$('.desig-comentario textarea').prop('value', desig.designacao_comentario || '');
+	}
+	formEdit(<?= json_encode($designacao) ?>);
+<?php endif; ?>
 </script>

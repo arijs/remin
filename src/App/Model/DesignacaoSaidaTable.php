@@ -85,6 +85,23 @@ class DesignacaoSaidaTable
         $this->tableGateway->insert($designacaoSaida->toArray());
     }
 
+    public function insertFromArrays(Designacao $designacao, $arrayId, $arrayComentario)
+    {
+        $designacaoSaidas = [];
+        $indexSaida = 0;
+        $saidas_id = !empty($arrayId) ? $arrayId : [];
+        foreach ($saidas_id as $saida_id) {
+            $designacaoSaida = new DesignacaoSaida();
+            $designacaoSaida->designacao_id = $designacao->designacao_id;
+            $designacaoSaida->saida_id = $saida_id;
+            $designacaoSaida->desa_comentario = $arrayComentario[$indexSaida];
+            $this->insertDesignacaoSaida($designacaoSaida);
+            $designacaoSaidas[] = $designacaoSaida;
+            $indexSaida++;
+        }
+        $designacao->setDesignacaoSaidas($designacaoSaidas);
+    }
+
     public function updateDesignacaoSaida(DesignacaoSaida $designacaoSaida)
     {
         $this->tableGateway->update(
@@ -101,6 +118,13 @@ class DesignacaoSaidaTable
         $this->tableGateway->delete([
             'designacao_id' => (int) $designacao_id,
             'saida_id' => (int) $saida_id,
+        ]);
+    }
+
+    public function deleteDesignacao($designacao_id)
+    {
+        $this->tableGateway->delete([
+            'designacao_id' => (int) $designacao_id,
         ]);
     }
 }

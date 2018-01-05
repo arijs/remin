@@ -15,7 +15,6 @@ use Zend\Expressive\ZendView\ZendViewRenderer;
 use \App\Model\Designacao;
 use \App\Model\DesignacaoIrmao;
 use \App\Model\DesignacaoSaida;
-use \App\Model\Irmao;
 
 class DesignacoesInserirAction implements ServerMiddlewareInterface
 {
@@ -49,12 +48,22 @@ class DesignacoesInserirAction implements ServerMiddlewareInterface
         // $irmao->irmao_nome = $post['nome'];
         // $this->irmaoTable->insertIrmao($irmao);
         $designacao = new Designacao();
+        $designacao->exchangeArray([
+            'designacao_territorio' => $post['territorio'],
+            'designacao_entrega' => $post['data_entrega'],
+            'designacao_devolucao' => $post['data_devolucao'],
+            'designacao_comentario' => $post['comentario'],
+        ]);
+        /*
         $designacao->designacao_territorio = $post['territorio'];
         $designacao->designacao_entrega = $post['data_entrega'];
         $designacao->designacao_devolucao = !empty($post['data_devolucao']) ? $post['data_devolucao'] : '0000-00-00';
         $designacao->designacao_comentario = $post['comentario'];
+        */
         $this->designacaoTable->insertDesignacao($designacao);
 
+        $this->designacaoIrmaoTable->insertFromArrays($designacao, $post['irmaos_id'], $post['irmaos_comentario']);
+        /*
         $designacaoIrmaos = [];
         $indexIrmao = 0;
         $irmaos_id = !empty($post['irmaos_id']) ? $post['irmaos_id'] : [];
@@ -68,7 +77,10 @@ class DesignacoesInserirAction implements ServerMiddlewareInterface
             $indexIrmao++;
         }
         $designacao->setDesignacaoIrmaos($designacaoIrmaos);
+        */
 
+        $this->designacaoSaidaTable->insertFromArrays($designacao, $post['saidas_id'], $post['saidas_comentario']);
+        /*
         $designacaoSaidas = [];
         $indexSaida = 0;
         $saidas_id = !empty($post['saidas_id']) ? $post['saidas_id'] : [];
@@ -82,6 +94,7 @@ class DesignacoesInserirAction implements ServerMiddlewareInterface
             $indexSaida++;
         }
         $designacao->setDesignacaoSaidas($designacaoSaidas);
+        */
 
         if (! $this->template) {
             return new JsonResponse([

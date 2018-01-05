@@ -12,6 +12,9 @@ use Zend\Expressive\Template;
 use Zend\Expressive\Plates\PlatesRenderer;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\ZendView\ZendViewRenderer;
+use \App\Model\Designacao;
+use \App\Model\DesignacaoIrmao;
+use \App\Model\DesignacaoSaida;
 
 class DesignacoesEditarAction implements ServerMiddlewareInterface
 {
@@ -49,6 +52,15 @@ class DesignacoesEditarAction implements ServerMiddlewareInterface
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
+        if ($request->getMethod() === 'POST') {
+            return $this->processPost($request);
+        } else {
+            return $this->processGet($request);
+        }
+    }
+
+    public function processGet(ServerRequestInterface $request)
+    {
         $id = $request->getAttribute('id');
         $desig = $this->designacaoTable->getDesignacao($id);
         $irmaos = $this->irmaoTable->fetchAllArray();
@@ -75,5 +87,42 @@ class DesignacoesEditarAction implements ServerMiddlewareInterface
         $this->injectAuth($request, $data);
 
         return new HtmlResponse($this->template->render('app::designacoes-editar', $data));
+    }
+
+    public function processPost(ServerRequestInterface $request)
+    {
+        $id = (int) $request->getAttribute('id');
+        $post = $request->getParsedBody();
+        $designacao = new Designacao();
+        $designacao->exchangeArray([
+            'designacao_id' => $id,
+            'designacao_territorio' => $post['territorio'],
+            'designacao_entrega' => $post['data_entrega'],
+            'designacao_devolucao' => $post['data_devolucao'],
+            'designacao_comentario' => $post['comentario'],
+        ]);
+        $this->designacaoTable->updateDesignacao($designacao);
+        $this->designacaoIrmaoTable->deleteDesignacao($id);
+        $this->designacaoSaidaTable->deleteDesignacao($id);
+        $this->designacaoIrmaoTable->insertFromArrays($designacao, $post['irmaos_id'], $post['irmaos_comentario']);
+        $this->designacaoSaidaTable->insertFromArrays($designacao, $post['saidas_id'], $post['saidas_comentario']);
+
+        if (! $this->template) {
+            return new JsonResponse([
+                'post' => $post,
+                'designacao' => $designacao->toArray(),
+                'designacao_irmaos' => $designacao->getDesignacaoIrmaosArray(),
+                'designacao_saidas' => $designacao->getDesignacaoSaidasArray(),
+            ]);
+        }
+
+        $data = [];
+        $data['editar'] = $id;
+        $data['post'] = $post;
+        $data['designacao'] = $designacao;
+
+        $this->injectAuth($request, $data);
+
+        return new HtmlResponse($this->template->render('app::designacoes-inserir', $data));
     }
 }

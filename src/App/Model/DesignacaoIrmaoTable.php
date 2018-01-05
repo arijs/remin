@@ -85,6 +85,23 @@ class DesignacaoIrmaoTable
         $this->tableGateway->insert($designacaoIrmao->toArray());
     }
 
+    public function insertFromArrays(Designacao $designacao, $arrayId, $arrayComentario)
+    {
+        $designacaoIrmaos = [];
+        $indexIrmao = 0;
+        $irmaos_id = !empty($arrayId) ? $arrayId : [];
+        foreach ($irmaos_id as $irmao_id) {
+            $designacaoIrmao = new DesignacaoIrmao();
+            $designacaoIrmao->designacao_id = $designacao->designacao_id;
+            $designacaoIrmao->irmao_id = $irmao_id;
+            $designacaoIrmao->deir_comentario = $arrayComentario[$indexIrmao];
+            $this->insertDesignacaoIrmao($designacaoIrmao);
+            $designacaoIrmaos[] = $designacaoIrmao;
+            $indexIrmao++;
+        }
+        $designacao->setDesignacaoIrmaos($designacaoIrmaos);
+    }
+
     public function updateDesignacaoIrmao(DesignacaoIrmao $designacaoIrmao)
     {
         $this->tableGateway->update(
@@ -101,6 +118,13 @@ class DesignacaoIrmaoTable
         $this->tableGateway->delete([
             'designacao_id' => (int) $designacao_id,
             'irmao_id' => (int) $irmao_id,
+        ]);
+    }
+
+    public function deleteDesignacao($designacao_id)
+    {
+        $this->tableGateway->delete([
+            'designacao_id' => (int) $designacao_id,
         ]);
     }
 }

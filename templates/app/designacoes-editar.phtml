@@ -20,7 +20,7 @@ $this->layout('layout::default', [
 </div>
 
 <pre>
-<?php print_r($designacao); ?>
+<?= json_encode($designacao); ?>
 </pre>
 
 <?php $this->insert('forms::designacoes', [
@@ -31,5 +31,7 @@ $this->layout('layout::default', [
 ]) ?>
 
 <?php $this->start('javascript') ?>
-<?php $this->insert('forms::designacoes-scripts') ?>
+<?php $this->insert('forms::designacoes-scripts', [
+	'designacao' => $designacao,
+]) ?>
 <?php $this->stop() ?>
