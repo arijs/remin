@@ -17,7 +17,7 @@ call_user_func(function () {
     /** @var \Psr\Container\ContainerInterface $container */
     $containerFactory = require 'config/container.php';
 
-    $container = $containerFactory->createContainer('remin');
+    $container = $containerFactory->createContainer('local');
 
     /** @var \Zend\Expressive\Application $app */
     $app = $container->get(\Zend\Expressive\Application::class);

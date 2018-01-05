@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'tervel' => [
+    'remin' => [
         'numero_territorios' => 64,
         'admin' => [
             'user' => 'adminusername',
