@@ -1,0 +1,116 @@
+
+<script src="/js/bootstrap-datepicker.js"></script>
+<script src="/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+<script>
+	function formatDate(date) {
+		var d = String(date.getDate());
+		var m = String(date.getMonth()+1);
+		var y = String(date.getFullYear());
+		return [
+			y,
+			('00'+m).substr(-2),
+			('00'+d).substr(-2)
+		].join('-');
+	}
+	$('.data-entrega').datepicker({
+		title: 'Entrega',
+		toggleActive: true,
+		todayBtn: true,
+		clearBtn: true,
+		todayHighlight: true,
+		language: 'pt-BR'
+	}).on('changeDate', function(ev) {
+		// console.log('changeDate entrega', ev);
+		var date = ev.date;
+		$(this).closest('.data-picker-col')
+			.find('.data-picker-hidden')
+			.prop('value', date ? formatDate(date) : '');
+	});
+	$('.data-devolucao').datepicker({
+		title: 'Devolução',
+		toggleActive: true,
+		todayBtn: true,
+		clearBtn: true,
+		todayHighlight: true,
+		language: 'pt-BR'
+	}).on('changeDate', function(ev) {
+		// console.log('changeDate devolucao', ev);
+		var date = ev.date;
+		$(this).closest('.data-picker-col')
+			.find('.data-picker-hidden')
+			.prop('value', date ? formatDate(date) : '');
+	});
+	var terr_bts = $('.territorio-botoes button');
+	var terr_inp = $('.territorio-botoes input');
+	terr_bts.on('click', function(ev) {
+		terr_bts.removeClass('btn-primary').addClass('btn-default');
+		$(this).removeClass('btn-default').addClass('btn-primary');
+		terr_inp.prop('value', $(this).prop('value'));
+	});
+	var irmaos_bts = $('.irmaos-botoes button');
+	irmaos_bts.on('click', function(ev) {
+		var bt = $(this);
+		bt.prop('disabled', true);
+		var row = $('<tr/>').append([
+			$('<td/>').append([
+				$('<input/>').prop({
+					type: 'hidden',
+					name: 'irmaos_id[]',
+					value: $(this).prop('value')
+				})[0],
+				$('<p/>').addClass('form-control-static').text($(this).text())[0]
+			])[0],
+			$('<td/>').append([
+				$('<div/>').addClass('form-group').append([
+					$('<div/>').addClass('input-group').append([
+						$('<input/>').addClass('form-control').prop({
+							type: 'text',
+							name: 'irmaos_comentario[]'
+						})[0],
+						$('<div/>').addClass('input-group-btn').append([
+							$('<button/>').addClass('btn btn-danger').text('remover').on('click', function(ev) {
+								bt.prop('disabled', false);
+								row.remove();
+								row = void 0;
+							})[0]
+						])[0]
+					])[0]
+				])[0]
+			])[0]
+		]);
+		$('.irmaos-botoes table').append(row);
+	});
+	var saidas_bts = $('.saidas-botoes button');
+	saidas_bts.on('click', function(ev) {
+		var bt = $(this);
+		bt.prop('disabled', true);
+		var row = $('<tr/>').append([
+			$('<td/>').append([
+				$('<input/>').prop({
+					type: 'hidden',
+					name: 'saidas_id[]',
+					value: $(this).prop('value')
+				})[0],
+				$('<p/>').addClass('form-control-static').text($(this).text())[0]
+			])[0],
+			$('<td/>').append([
+				$('<div/>').addClass('form-group').append([
+					$('<div/>').addClass('input-group').append([
+						$('<input/>').addClass('form-control').prop({
+							type: 'text',
+							name: 'saidas_comentario[]'
+						})[0],
+						$('<div/>').addClass('input-group-btn').append([
+							$('<button/>').addClass('btn btn-danger').text('remover').on('click', function(ev) {
+								bt.prop('disabled', false);
+								row.remove();
+								row = void 0;
+							})[0]
+						])[0]
+					])[0]
+				])[0]
+			])[0]
+		]);
+		$('.saidas-botoes table').append(row);
+	});
+</script>

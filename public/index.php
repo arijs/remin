@@ -15,7 +15,9 @@ require 'vendor/autoload.php';
  */
 call_user_func(function () {
     /** @var \Psr\Container\ContainerInterface $container */
-    $container = require 'config/container.php';
+    $containerFactory = require 'config/container.php';
+
+    $container = $containerFactory->createContainer('remin');
 
     /** @var \Zend\Expressive\Application $app */
     $app = $container->get(\Zend\Expressive\Application::class);

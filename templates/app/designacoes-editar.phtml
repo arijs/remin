@@ -1,0 +1,35 @@
+<?php
+$this->layout('layout::default', [
+	'title' => 'Designações',
+	'authentication' => isset($authentication) ? $authentication : null,
+])
+?>
+<?php $this->start('stylesheets') ?>
+<?php $this->insert('forms::designacoes-styles') ?>
+<?php $this->stop() ?>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="list-group">
+			<a class="list-group-item" href="/">Início</a>
+			<a class="list-group-item" href="/irmaos">Irmãos</a>
+			<a class="list-group-item" href="/saidas">Saídas</a>
+			<a class="list-group-item" href="/designacoes">Designações</a>
+		</div>
+	</div>
+</div>
+
+<pre>
+<?php print_r($designacao); ?>
+</pre>
+
+<?php $this->insert('forms::designacoes', [
+	'numero_territorios' => $numero_territorios,
+	'designacao' => $designacao,
+	'irmaos' => $irmaos,
+	'saidas' => $saidas,
+]) ?>
+
+<?php $this->start('javascript') ?>
+<?php $this->insert('forms::designacoes-scripts') ?>
+<?php $this->stop() ?>

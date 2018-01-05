@@ -13,7 +13,7 @@ class MyAuthAdapterFactory
         // Retrieve any dependencies from the container when creating the instance
         $config = $container->get('config');
         return new MyAuthAdapter(
-            $config['tervel']['admin']
+            $config['remin']['admin']
         );
     }
 }

@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
-class DesignacoesIndexFactory
+class DesignacoesEditarFactory
 {
     public function __invoke(ContainerInterface $container)
     {
@@ -21,7 +21,7 @@ class DesignacoesIndexFactory
         $designacaoSaidaTable = $container->get(\App\Model\DesignacaoSaidaTable::class);
         $config = $container->get('config');
 
-        return new DesignacoesIndexAction(
+        return new DesignacoesEditarAction(
             $router,
             $template,
             $designacaoTable,

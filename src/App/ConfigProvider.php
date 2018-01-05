@@ -53,6 +53,7 @@ class ConfigProvider
                 Action\SaidasInserirAction::class => Action\SaidasInserirFactory::class,
                 Action\DesignacoesIndexAction::class => Action\DesignacoesIndexFactory::class,
                 Action\DesignacoesInserirAction::class => Action\DesignacoesInserirFactory::class,
+                Action\DesignacoesEditarAction::class => Action\DesignacoesEditarFactory::class,
                 /* */
                 AuthenticationService::class => AuthenticationServiceFactory::class,
                 MyAuthAdapter::class => MyAuthAdapterFactory::class,
@@ -126,6 +127,7 @@ class ConfigProvider
         return [
             'paths' => [
                 'app'    => ['templates/app'],
+                'forms'  => ['templates/forms'],
                 'error'  => ['templates/error'],
                 'layout' => ['templates/layout'],
             ],

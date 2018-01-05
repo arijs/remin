@@ -56,3 +56,7 @@ $app->post('/designacoes/inserir', [
 	App\Action\AuthAction::class,
 	App\Action\DesignacoesInserirAction::class
 ], 'designacoes.inserir');
+$app->route('/designacoes/editar/{id:\d+}', [
+	App\Action\AuthAction::class,
+	App\Action\DesignacoesEditarAction::class
+], ['GET', 'POST'], 'designacoes.editar');
