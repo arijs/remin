@@ -60,3 +60,7 @@ $app->route('/designacoes/editar/{id:\d+}', [
 	App\Action\AuthAction::class,
 	App\Action\DesignacoesEditarAction::class
 ], ['GET', 'POST'], 'designacoes.editar');
+$app->route('/designacoes/remover/{id:\d+}', [
+	App\Action\AuthAction::class,
+	App\Action\DesignacoesRemoverAction::class
+], ['GET', 'POST'], 'designacoes.remover');

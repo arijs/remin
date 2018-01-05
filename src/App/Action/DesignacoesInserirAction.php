@@ -62,7 +62,13 @@ class DesignacoesInserirAction implements ServerMiddlewareInterface
         */
         $this->designacaoTable->insertDesignacao($designacao);
 
-        $this->designacaoIrmaoTable->insertFromArrays($designacao, $post['irmaos_id'], $post['irmaos_comentario']);
+        if (!empty($post['irmaos_id'])) {
+            $this->designacaoIrmaoTable->insertFromArrays(
+                $designacao,
+                $post['irmaos_id'],
+                !empty($post['irmaos_comentario']) ? $post['irmaos_comentario'] : []
+            );
+        }
         /*
         $designacaoIrmaos = [];
         $indexIrmao = 0;
@@ -79,7 +85,13 @@ class DesignacoesInserirAction implements ServerMiddlewareInterface
         $designacao->setDesignacaoIrmaos($designacaoIrmaos);
         */
 
-        $this->designacaoSaidaTable->insertFromArrays($designacao, $post['saidas_id'], $post['saidas_comentario']);
+        if (!empty($post['saidas_id'])) {
+            $this->designacaoSaidaTable->insertFromArrays(
+                $designacao,
+                $post['saidas_id'],
+                !empty($post['saidas_comentario']) ? $post['saidas_comentario'] : []
+            );
+        }
         /*
         $designacaoSaidas = [];
         $indexSaida = 0;

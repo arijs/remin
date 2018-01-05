@@ -14,11 +14,13 @@ class Designacao
 
     public function exchangeArray(array $data)
     {
+        $entrega = !empty($data['designacao_entrega']) ? $data['designacao_entrega'] : null;
+        $devolucao = !empty($data['designacao_devolucao']) ? $data['designacao_devolucao'] : null;
         $this->designacao_id = !empty($data['designacao_id']) ? $data['designacao_id'] : null;
         $this->designacao_territorio = !empty($data['designacao_territorio']) ? $data['designacao_territorio'] : null;
-        $this->designacao_entrega    = !empty($data['designacao_entrega']) ? $data['designacao_entrega'] : null;
-        $this->designacao_devolucao  = !empty($data['designacao_devolucao']) ? $data['designacao_devolucao'] : null;
-        $this->designacao_comentario = !empty($data['designacao_comentario']) ? $data['designacao_comentario'] : null;
+        $this->designacao_entrega    = !empty($entrega) && intval($entrega) ? $entrega : null;
+        $this->designacao_devolucao  = !empty($devolucao) && intval($devolucao) ? $devolucao : null;
+        $this->designacao_comentario = !empty($data['designacao_comentario']) ? $data['designacao_comentario'] : '';
     }
 
     public function toArray() {

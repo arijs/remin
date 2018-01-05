@@ -16,7 +16,7 @@ use \App\Model\Designacao;
 use \App\Model\DesignacaoIrmao;
 use \App\Model\DesignacaoSaida;
 
-class DesignacoesEditarAction implements ServerMiddlewareInterface
+class DesignacoesRemoverAction implements ServerMiddlewareInterface
 {
     use InjectAuthenticationDataTrait;
 
@@ -72,6 +72,7 @@ class DesignacoesEditarAction implements ServerMiddlewareInterface
         if (! $this->template) {
             return new JsonResponse([
                 'numero_territorios' => $this->numeroTerritorios,
+                'remover' => $id,
                 'designacao' => $desig->toArray(),
                 'irmaos' => $irmaos,
                 'saidas' => $saidas,
@@ -80,49 +81,37 @@ class DesignacoesEditarAction implements ServerMiddlewareInterface
 
         $data = [];
         $data['numero_territorios'] = $this->numeroTerritorios;
+        $data['remover'] = $id;
         $data['designacao'] = $desig;
         $data['irmaos'] = $irmaos;
         $data['saidas'] = $saidas;
 
         $this->injectAuth($request, $data);
 
-        return new HtmlResponse($this->template->render('app::designacoes-editar', $data));
+        return new HtmlResponse($this->template->render('app::designacoes-remover', $data));
     }
 
     public function processPost(ServerRequestInterface $request)
     {
         $id = (int) $request->getAttribute('id');
         $post = $request->getParsedBody();
-        $designacao = new Designacao();
-        $designacao->exchangeArray([
-            'designacao_id' => $id,
-            'designacao_territorio' => $post['territorio'],
-            'designacao_entrega' => $post['data_entrega'],
-            'designacao_devolucao' => $post['data_devolucao'],
-            'designacao_comentario' => $post['comentario'],
-        ]);
-        $this->designacaoTable->updateDesignacao($designacao);
         $this->designacaoIrmaoTable->deleteDesignacao($id);
         $this->designacaoSaidaTable->deleteDesignacao($id);
-        $this->designacaoIrmaoTable->insertFromArrays($designacao, $post['irmaos_id'], $post['irmaos_comentario']);
-        $this->designacaoSaidaTable->insertFromArrays($designacao, $post['saidas_id'], $post['saidas_comentario']);
+        $this->designacaoTable->deleteDesignacao($id);
 
         if (! $this->template) {
             return new JsonResponse([
+                'remover' => $id,
                 'post' => $post,
-                'designacao' => $designacao->toArray(),
-                'designacao_irmaos' => $designacao->getDesignacaoIrmaosArray(),
-                'designacao_saidas' => $designacao->getDesignacaoSaidasArray(),
             ]);
         }
 
         $data = [];
-        $data['editar'] = $id;
+        $data['remover'] = $id;
         $data['post'] = $post;
-        $data['designacao'] = $designacao;
 
         $this->injectAuth($request, $data);
 
-        return new HtmlResponse($this->template->render('app::designacoes-inserir', $data));
+        return new HtmlResponse($this->template->render('app::designacoes-remover', $data));
     }
 }

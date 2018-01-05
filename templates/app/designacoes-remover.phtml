@@ -1,0 +1,68 @@
+<?php
+$this->layout('layout::default', [
+	'title' => 'Designações',
+	'authentication' => isset($authentication) ? $authentication : null,
+]);
+$id = $this->e($remover);
+?>
+<?php $this->start('stylesheets') ?>
+<?php $this->insert('forms::designacoes-styles') ?>
+<?php $this->stop() ?>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="list-group">
+			<a class="list-group-item" href="/">Início</a>
+			<a class="list-group-item" href="/irmaos">Irmãos</a>
+			<a class="list-group-item" href="/saidas">Saídas</a>
+			<a class="list-group-item" href="/designacoes">Designações</a>
+		</div>
+	</div>
+</div>
+
+<?php if (isset($post)): ?>
+<div class="panel panel-info">
+	<div class="panel-heading">Sucesso</div>
+	<div class="panel-body">
+		<p>
+			<span class="glyphicon glyphicon-ok"></span>
+			Designação removida com sucesso!
+		</p>
+	</div>
+</div>
+
+<p><a href="/designacoes">Voltar para a lista</a></p>
+<?php else: ?>
+
+<div class="alert alert-warning" role="alert">
+	<p>
+		<span class="glyphicon glyphicon-exclamation-sign"></span>
+		<strong>Atenção!</strong>
+		Tem certeza que deseja remover esta designação?
+	</p>
+</div>
+
+<div class="panel panel-danger">
+	<div class="panel-heading">Designação a ser removida</div>
+	<div class="panel-body">
+		<ul>
+<?php
+$this->insert('forms::designacao-linha', [
+	'designacao' => $designacao,
+]);
+?>
+		</ul>
+		<div class="row">
+			<div class="col-md-6 text-center">
+				<a href="/designacoes" class="btn btn-default">Cancelar</a>
+			</div>
+			<div class="col-md-6 text-center">
+				<form class="form-inline" action="/designacoes/remover/<?= $id ?>" method="post">
+					<button type="submit" class="btn btn-danger">Remover</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php endif; ?>

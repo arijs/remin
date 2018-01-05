@@ -94,7 +94,7 @@ class DesignacaoIrmaoTable
             $designacaoIrmao = new DesignacaoIrmao();
             $designacaoIrmao->designacao_id = $designacao->designacao_id;
             $designacaoIrmao->irmao_id = $irmao_id;
-            $designacaoIrmao->deir_comentario = $arrayComentario[$indexIrmao];
+            $designacaoIrmao->deir_comentario = !empty($arrayComentario[$indexIrmao]) ? $arrayComentario[$indexIrmao] : '';
             $this->insertDesignacaoIrmao($designacaoIrmao);
             $designacaoIrmaos[] = $designacaoIrmao;
             $indexIrmao++;

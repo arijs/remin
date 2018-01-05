@@ -54,6 +54,7 @@ class ConfigProvider
                 Action\DesignacoesIndexAction::class => Action\DesignacoesIndexFactory::class,
                 Action\DesignacoesInserirAction::class => Action\DesignacoesInserirFactory::class,
                 Action\DesignacoesEditarAction::class => Action\DesignacoesEditarFactory::class,
+                Action\DesignacoesRemoverAction::class => Action\DesignacoesRemoverFactory::class,
                 /* */
                 AuthenticationService::class => AuthenticationServiceFactory::class,
                 MyAuthAdapter::class => MyAuthAdapterFactory::class,

@@ -94,7 +94,7 @@ class DesignacaoSaidaTable
             $designacaoSaida = new DesignacaoSaida();
             $designacaoSaida->designacao_id = $designacao->designacao_id;
             $designacaoSaida->saida_id = $saida_id;
-            $designacaoSaida->desa_comentario = $arrayComentario[$indexSaida];
+            $designacaoSaida->desa_comentario = !empty($arrayComentario[$indexSaida]) ? $arrayComentario[$indexSaida] : '';
             $this->insertDesignacaoSaida($designacaoSaida);
             $designacaoSaidas[] = $designacaoSaida;
             $indexSaida++;
