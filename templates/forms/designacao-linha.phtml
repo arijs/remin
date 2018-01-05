@@ -1,0 +1,58 @@
+<?php
+	$esc_id = $this->e($designacao->designacao_id);
+	$esc_territorio = $this->e($designacao->designacao_territorio);
+	$esc_entrega    = $this->e($designacao->designacao_entrega);
+	$esc_devolucao  = $this->e($designacao->designacao_devolucao);
+	$esc_comentario = $this->e($designacao->designacao_comentario);
+?>
+	<li>
+		<div class="row">
+			<div class="col-md-4">
+				<p>
+					<a href="/designacoes/editar/<?= $esc_id ?>">(editar)</a>
+					<a href="/designacoes/remover/<?= $esc_id ?>">(remover)</a>
+					(<?= $esc_id ?>) Território <?= $esc_territorio ?>
+				</p>
+				<p>
+					Entrega <?= $esc_entrega ?> - Devolução <?= $esc_devolucao ?>
+				</p>
+<?php if (!empty($esc_comentario)): ?>
+				<p>
+					<?= $esc_comentario ?>
+				</p>
+<?php endif; ?>
+			</div>
+			<div class="col-md-4">
+				<ul>
+<?php foreach ($designacao->designacaoIrmaos as $deir): ?>
+<?php
+	$deIrmao = $deir->irmao;
+	$deIrmao = empty($deIrmao) ? '--' : $deIrmao->irmao_nome;
+	$deIrmao = $this->e($deIrmao);
+	$deCom = $this->e($deir->deir_comentario);
+?>
+					<li>
+						<span class="irmao"><?= $deIrmao ?></span>
+						<span class="comentario"><?= $deCom ?></span>
+					</li>
+<?php endforeach; ?>
+				</ul>
+			</div>
+			<div class="col-md-4">
+				<ul>
+<?php foreach ($designacao->designacaoSaidas as $desa): ?>
+<?php
+	$deSaida = $desa->saida;
+	$deSaida = empty($deSaida) ? '--' : $deSaida->saida_nome;
+	$deSaida = $this->e($deSaida);
+	$deCom = $this->e($desa->desa_comentario);
+?>
+					<li>
+						<span class="saida"><?= $deSaida ?></span>
+						<span class="comentario"><?= $deCom ?></span>
+					</li>
+<?php endforeach; ?>
+				</ul>
+			</div>
+		</div>
+	</li>
