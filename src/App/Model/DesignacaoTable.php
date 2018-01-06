@@ -93,7 +93,14 @@ class DesignacaoTable
 
     public function insertDesignacao(Designacao $designacao)
     {
-        $this->tableGateway->insert($designacao->toArray());
+        $array = $designacao->toArray();
+        if (empty($array['designacao_entrega'])) {
+            $array['designacao_entrega'] = '0000-00-00';
+        }
+        if (empty($array['designacao_devolucao'])) {
+            $array['designacao_devolucao'] = '0000-00-00';
+        }
+        $this->tableGateway->insert($array);
         $designacao->designacao_id = $this->tableGateway->getLastInsertValue();
     }
 
