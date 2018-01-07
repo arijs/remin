@@ -5,6 +5,8 @@ namespace App\Model;
 use RuntimeException;
 use Zend\Db\TableGateway\TableGatewayInterface;
 use Zend\Db\Sql\Select;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\ResultSet;
 
 class DesignacaoTable
 {
@@ -29,9 +31,14 @@ class DesignacaoTable
 
     public function fetchOffsetLimitArray($offset, $limit)
     {
-        $rowset = $this->fetchOffsetLimit($offset, $limit);
+        $result = $this->fetchOffsetLimit($offset, $limit);
+        return $this->resultToArray($result);
+    }
+
+    public function resultToArray($result)
+    {
         $list = [];
-        foreach ($rowset as $row) {
+        foreach ($result as $row) {
             $list[] = $row;
         }
         return $list;
@@ -119,5 +126,52 @@ class DesignacaoTable
         $this->tableGateway->delete([
             'designacao_id' => (int) $designacao_id,
         ]);
+    }
+
+    public function getTerritoriosRanked()
+    {
+        $adapter = $this->tableGateway->getAdapter();
+        $rs = new ResultSet();
+        $rs->setArrayObjectPrototype(new Designacao());
+        $adapter->query('SET @terr_current = 0', Adapter::QUERY_MODE_EXECUTE);
+        $adapter->query('SET @terr_rank = 0', Adapter::QUERY_MODE_EXECUTE);
+        $result = $adapter->query(
+            'SELECT designacao_id
+            , designacao_territorio
+            , designacao_entrega
+            , designacao_devolucao
+            , designacao_comentario
+            , @terr_rank := IF(@terr_current = designacao_territorio, @terr_rank + 1, 1) AS terr_rank
+            , @terr_current := designacao_territorio as terr_current
+            FROM designacoes
+            ORDER BY designacao_territorio ASC
+            , designacao_entrega DESC
+            , designacao_id DESC',
+            Adapter::QUERY_MODE_EXECUTE,
+            $rs
+        );
+        return $this->resultToArray($result);
+    }
+
+    public function resultGroupByTerritorio($result)
+    {
+        $groupList = [];
+        $groupMap = [];
+        $group = null;
+        foreach ($result as $desig) {
+            $dt = $desig->designacao_territorio;
+            if (empty($groupMap[$dt])) {
+                $groupMap[$dt] = [
+                    'territorio' => $dt,
+                    'list' => []
+                ];
+                $group = &$groupMap[$dt];
+                $groupList[] = &$group;
+            } else {
+                $group = &$groupMap[$dt];
+            }
+            $group['list'][] = $desig;
+        }
+        return $groupList;
     }
 }

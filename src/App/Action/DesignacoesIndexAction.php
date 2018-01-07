@@ -60,16 +60,18 @@ class DesignacoesIndexAction implements ServerMiddlewareInterface
         $irmaosMap = $this->irmaoTable->listToMap($irmaos);
         $saidas = $this->saidaTable->fetchAllArray();
         $saidasMap = $this->saidaTable->listToMap($saidas);
-        $list = $this->designacaoTable->fetchOffsetLimitArray($offset, $rowsPage);
+        // $list = $this->designacaoTable->fetchOffsetLimitArray($offset, $rowsPage);
+        $list = $this->designacaoTable->getTerritoriosRanked();
         foreach ($list as $desig) {
             $this->designacaoIrmaoTable->fetchDesignacaoIrmaos($desig, $irmaosMap);
             $this->designacaoSaidaTable->fetchDesignacaoSaidas($desig, $saidasMap);
         }
+        $list = $this->designacaoTable->resultGroupByTerritorio($list);
         if (! $this->template) {
             return new JsonResponse([
                 'numero_territorios' => $this->numeroTerritorios,
                 'result' => $count,
-                'list' => $list->toArray(),
+                'list' => $list,
                 'irmaos' => $irmaos->toArray(),
                 'saidas' => $saidas->toArray(),
             ]);

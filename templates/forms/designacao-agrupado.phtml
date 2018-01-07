@@ -1,0 +1,93 @@
+
+<?php $totalTerritorios = count($list); ?>
+<?php $groupLimit = 3; ?>
+<?php $grupoLinha = 0; ?>
+<?php while ($grupoLinha * $groupLimit < $totalTerritorios): ?>
+	<div class="row">
+<?php for ($gi = 0; $gi < $groupLimit; $gi++): ?>
+<?php $t = $grupoLinha * $groupLimit + $gi; ?>
+<?php if (!empty($list[$t])): ?>
+<?php $grupo = $list[$t]; ?>
+<?php if (!is_array($grupo) || empty($grupo['territorio']) || empty($grupo['list'])): ?>
+	<pre><?php print_r($grupo) ?></pre>
+<?php else: ?>
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<!-- Default panel contents -->
+			<div class="panel-heading">Território <?= $this->e($grupo['territorio']) ?></div>
+			<!-- List group -->
+			<ul class="list-group">
+<?php foreach ($grupo['list'] as $desig): ?>
+<?php
+	$esc_id = $this->e($desig->designacao_id);
+	$esc_entrega    = $this->e($desig->designacao_entrega);
+	$esc_devolucao  = $this->e($desig->designacao_devolucao);
+	$esc_comentario = $this->e($desig->designacao_comentario);
+?>
+				<li class="list-group-item">
+				<p>
+					<a href="/designacoes/editar/<?= $esc_id ?>">(editar)</a>
+					<a href="/designacoes/remover/<?= $esc_id ?>">(remover)</a>
+					(<?= $esc_id ?>)
+				</p>
+				<p class="lead">
+<?php if (empty($esc_entrega)): ?>
+					<span class="label label-danger">Sem data</span>
+<?php else: ?>
+					<span class="label label-success"><?= $esc_entrega ?></span>
+<?php endif; ?>
+					/
+<?php if (empty($esc_devolucao)): ?>
+					<span class="label label-danger">Em uso</span>
+<?php else: ?>
+					<span class="label label-success"><?= $esc_devolucao ?></span>
+<?php endif; ?>
+				</p>
+<?php if (!empty($esc_comentario)): ?>
+				<p><?= $esc_comentario ?></p>
+<?php endif; ?>
+				<div class="row">
+					<div class="col-md-6">
+						<ul class="list-unstyled">
+<?php foreach ($desig->designacaoIrmaos as $deir): ?>
+<?php
+$deIrmao = $deir->irmao;
+$deIrmao = empty($deIrmao) ? '--' : $deIrmao->irmao_nome;
+$deIrmao = $this->e($deIrmao);
+$deCom = $this->e($deir->deir_comentario);
+?>
+							<li>
+								<span class="irmao"><?= $deIrmao ?></span>
+								<span class="comentario"><?= $deCom ?></span>
+							</li>
+<?php endforeach; ?>
+						</ul>
+					</div>
+					<div class="col-md-6">
+						<ul class="list-unstyled">
+<?php foreach ($desig->designacaoSaidas as $desa): ?>
+<?php
+	$deSaida = $desa->saida;
+	$deSaida = empty($deSaida) ? '--' : $deSaida->saida_nome;
+	$deSaida = $this->e($deSaida);
+	$deCom = $this->e($desa->desa_comentario);
+?>
+							<li>
+								<span class="saida"><?= $deSaida ?></span>
+								<span class="comentario"><?= $deCom ?></span>
+							</li>
+<?php endforeach; ?>
+						</ul>
+					</div>
+				</div>
+				</li>
+<?php endforeach; ?>
+			</ul>
+		</div>
+	</div>
+<?php endif; ?>
+<?php endif; ?>
+<?php endfor; ?>
+<?php $grupoLinha++; ?>
+	</div>
+<?php endwhile; ?>
