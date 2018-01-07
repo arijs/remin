@@ -32,9 +32,9 @@
 				</p>
 				<p class="lead">
 <?php if (empty($esc_entrega)): ?>
-					<span class="label label-danger">Sem data</span>
+					<span class="label label-warning">Sem data</span>
 <?php else: ?>
-					<span class="label label-success"><?= $esc_entrega ?></span>
+					<span class="label label-default"><?= $esc_entrega ?></span>
 <?php endif; ?>
 					/
 <?php if (empty($esc_devolucao)): ?>
@@ -57,8 +57,8 @@ $deIrmao = $this->e($deIrmao);
 $deCom = $this->e($deir->deir_comentario);
 ?>
 							<li>
-								<span class="irmao"><?= $deIrmao ?></span>
-								<span class="comentario"><?= $deCom ?></span>
+								<strong class="irmao"><?= $deIrmao ?></strong>
+								<em class="comentario"><?= $deCom ?></em>
 							</li>
 <?php endforeach; ?>
 						</ul>
@@ -73,8 +73,8 @@ $deCom = $this->e($deir->deir_comentario);
 	$deCom = $this->e($desa->desa_comentario);
 ?>
 							<li>
-								<span class="saida"><?= $deSaida ?></span>
-								<span class="comentario"><?= $deCom ?></span>
+								<strong class="saida"><?= $deSaida ?></strong>
+								<em class="comentario"><?= $deCom ?></em>
 							</li>
 <?php endforeach; ?>
 						</ul>
