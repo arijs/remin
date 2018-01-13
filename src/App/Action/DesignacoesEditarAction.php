@@ -104,8 +104,22 @@ class DesignacoesEditarAction implements ServerMiddlewareInterface
         $this->designacaoTable->updateDesignacao($designacao);
         $this->designacaoIrmaoTable->deleteDesignacao($id);
         $this->designacaoSaidaTable->deleteDesignacao($id);
-        $this->designacaoIrmaoTable->insertFromArrays($designacao, $post['irmaos_id'], $post['irmaos_comentario']);
-        $this->designacaoSaidaTable->insertFromArrays($designacao, $post['saidas_id'], $post['saidas_comentario']);
+        if (!empty($post['irmaos_id'])) {
+            $this->designacaoIrmaoTable->insertFromArrays(
+                $designacao,
+                $post['irmaos_id'],
+                !empty($post['irmaos_comentario']) ? $post['irmaos_comentario'] : []
+            );
+        }
+        // $this->designacaoIrmaoTable->insertFromArrays($designacao, $post['irmaos_id'], $post['irmaos_comentario']);
+        if (!empty($post['saidas_id'])) {
+            $this->designacaoSaidaTable->insertFromArrays(
+                $designacao,
+                $post['saidas_id'],
+                !empty($post['saidas_comentario']) ? $post['saidas_comentario'] : []
+            );
+        }
+        // $this->designacaoSaidaTable->insertFromArrays($designacao, $post['saidas_id'], $post['saidas_comentario']);
 
         if (! $this->template) {
             return new JsonResponse([
