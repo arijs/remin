@@ -49,6 +49,7 @@ class ConfigProvider
                 Action\HomePageAction::class => Action\HomePageFactory::class,
                 Action\IrmaosIndexAction::class => Action\IrmaosIndexFactory::class,
                 Action\IrmaosInserirAction::class => Action\IrmaosInserirFactory::class,
+                Action\IrmaosDesignacoesAction::class => Action\IrmaosDesignacoesFactory::class,
                 Action\SaidasIndexAction::class => Action\SaidasIndexFactory::class,
                 Action\SaidasInserirAction::class => Action\SaidasInserirFactory::class,
                 Action\DesignacoesIndexAction::class => Action\DesignacoesIndexFactory::class,

@@ -40,6 +40,10 @@ $app->post('/irmaos/inserir', [
 	App\Action\AuthAction::class,
 	App\Action\IrmaosInserirAction::class
 ], 'irmaos.inserir');
+$app->get('/irmaos/designacoes/{id:\d+}', [
+	App\Action\AuthAction::class,
+	App\Action\IrmaosDesignacoesAction::class
+], 'irmaos.designacoes');
 $app->get('/saidas', [
 	App\Action\AuthAction::class,
 	App\Action\SaidasIndexAction::class

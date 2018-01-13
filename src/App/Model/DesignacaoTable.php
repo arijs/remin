@@ -153,6 +153,34 @@ class DesignacaoTable
         return $this->resultToArray($result);
     }
 
+    public function getTerritoriosByIrmaoRanked($irmao_id)
+    {
+        $adapter = $this->tableGateway->getAdapter();
+        $rs = new ResultSet();
+        $rs->setArrayObjectPrototype(new Designacao());
+        $adapter->query('SET @terr_current = 0', Adapter::QUERY_MODE_EXECUTE);
+        $adapter->query('SET @terr_rank = 0', Adapter::QUERY_MODE_EXECUTE);
+        $result = $adapter->query(
+            'SELECT d.designacao_id
+            , d.designacao_territorio
+            , d.designacao_entrega
+            , d.designacao_devolucao
+            , d.designacao_comentario
+            , @terr_rank := IF(@terr_current = d.designacao_territorio, @terr_rank + 1, 1) AS terr_rank
+            , @terr_current := d.designacao_territorio as terr_current
+            FROM designacoes_irmaos di
+            RIGHT JOIN designacoes d
+            ON di.designacao_id = d.designacao_id
+            WHERE di.irmao_id = ?
+            ORDER BY d.designacao_territorio ASC
+            , d.designacao_entrega DESC
+            , d.designacao_id DESC',
+            [$irmao_id],
+            $rs
+        );
+        return $this->resultToArray($result);
+    }
+
     public function resultGroupByTerritorio($result)
     {
         $groupList = [];

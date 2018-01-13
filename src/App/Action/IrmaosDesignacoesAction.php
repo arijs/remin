@@ -13,7 +13,7 @@ use Zend\Expressive\Plates\PlatesRenderer;
 use Zend\Expressive\Twig\TwigRenderer;
 use Zend\Expressive\ZendView\ZendViewRenderer;
 
-class DesignacoesIndexAction implements ServerMiddlewareInterface
+class IrmaosDesignacoesAction implements ServerMiddlewareInterface
 {
     use InjectAuthenticationDataTrait;
 
@@ -49,6 +49,7 @@ class DesignacoesIndexAction implements ServerMiddlewareInterface
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
+        $desigIrmao = $request->getAttribute('id');
         $query  = $request->getQueryParams();
         $count = $this->designacaoTable->countAll();
         $rowsPage = 40;
@@ -56,17 +57,13 @@ class DesignacoesIndexAction implements ServerMiddlewareInterface
         $page = isset($query['page']) ? intval($query['page']) : $lastPage;
         $page = $page < 1 ? 1 : $page;
         $offset = ($page - 1) * $rowsPage;
-        $desigIrmao = isset($query['irmao']) ? $query['irmao'] : '';
         $irmaos = $this->irmaoTable->fetchAllArray();
         $irmaosMap = $this->irmaoTable->listToMap($irmaos);
         $saidas = $this->saidaTable->fetchAllArray();
         $saidasMap = $this->saidaTable->listToMap($saidas);
         // $list = $this->designacaoTable->fetchOffsetLimitArray($offset, $rowsPage);
-        if (is_numeric($desigIrmao)) {
-            $list = $this->designacaoTable->getTerritoriosByIrmaoRanked(intval($desigIrmao));
-        } else {
-            $list = $this->designacaoTable->getTerritoriosRanked();
-        }
+        $irmao = isset($irmaosMap[$desigIrmao]) ? $irmaosMap[$desigIrmao] : null;
+        $list = $this->designacaoTable->getTerritoriosByIrmaoRanked(intval($desigIrmao));
         foreach ($list as $desig) {
             $this->designacaoIrmaoTable->fetchDesignacaoIrmaos($desig, $irmaosMap);
             $this->designacaoSaidaTable->fetchDesignacaoSaidas($desig, $saidasMap);
@@ -77,6 +74,7 @@ class DesignacoesIndexAction implements ServerMiddlewareInterface
                 'numero_territorios' => $this->numeroTerritorios,
                 'result' => $count,
                 'list' => $list,
+                'irmao' => $irmao->toArray(),
                 'irmaos' => $irmaos->toArray(),
                 'saidas' => $saidas->toArray(),
             ]);
@@ -86,11 +84,12 @@ class DesignacoesIndexAction implements ServerMiddlewareInterface
         $data['numero_territorios'] = $this->numeroTerritorios;
         $data['result'] = $count;
         $data['list'] = $list;
+        $data['irmao'] = $irmao;
         $data['irmaos'] = $irmaos;
         $data['saidas'] = $saidas;
 
         $this->injectAuth($request, $data);
 
-        return new HtmlResponse($this->template->render('app::designacoes-index', $data));
+        return new HtmlResponse($this->template->render('app::irmaos-designacoes', $data));
     }
 }
