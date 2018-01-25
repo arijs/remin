@@ -6,22 +6,13 @@ use RuntimeException;
 use Zend\Db\TableGateway\TableGatewayInterface;
 use Zend\Db\Sql\Select;
 
-class IrmaoTable
+class UsuarioAcessoTable
 {
     private $tableGateway;
 
     public function __construct(TableGatewayInterface $tableGateway)
     {
         $this->tableGateway = $tableGateway;
-    }
-
-    public function listToMap($list)
-    {
-        $map = [];
-        foreach ($list as $irmao) {
-            $map[$irmao->irmao_id] = $irmao;
-        }
-        return $map;
     }
 
     public function fetchAll()
@@ -63,48 +54,24 @@ class IrmaoTable
         return $row;
     }
 
-    public function getIrmao($id)
+    public function insertUsuarioAcesso(UsuarioAcesso $usuarioAcesso)
     {
-        $id = (int) $id;
-        $rowset = $this->tableGateway->select(['irmao_id' => $id]);
-        $row = $rowset->current();
-        if (! $row) {
-            throw new RuntimeException(sprintf(
-                'Could not find row with identifier %d',
-                $id
-            ));
-        }
-
-        return $row;
+        $this->tableGateway->insert($usuarioAcesso->toArray());
     }
 
-    public function saveIrmao(Irmao $irmao)
-    {
-        $id = (int) $irmao->irmao_id;
-
-        if ($id === 0) {
-            return $this->insertIrmao($irmao);
-        }
-
-        return $this->updateIrmao($irmao);
-    }
-
-    public function insertIrmao(Irmao $irmao)
-    {
-        $this->tableGateway->insert($irmao->toArray());
-        $irmao->irmao_id = $this->tableGateway->getLastInsertValue();
-    }
-
-    public function updateIrmao(Irmao $irmao)
+    public function updateUsuarioAcesso(UsuarioAcesso $usuarioAcesso)
     {
         $this->tableGateway->update(
-            $irmao->toArray(),
-            ['irmao_id' => (int) $irmao->irmao_id]
+            $usuarioAcesso->toArray(),
+            [
+                'usuario_id' => (int) $usuarioAcesso->usuario_id,
+                'acesso_data' => $usuarioAcesso->acesso_data,
+            ]
         );
     }
 
-    public function deleteIrmao($id)
+    public function deleteUsuario($id)
     {
-        $this->tableGateway->delete(['irmao_id' => (int) $id]);
+        $this->tableGateway->delete(['usuario_id' => (int) $id]);
     }
 }

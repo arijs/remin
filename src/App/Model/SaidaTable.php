@@ -86,14 +86,7 @@ class SaidaTable
             return $this->insertSaida($saida);
         }
 
-        if (! $this->getSaida($id)) {
-            throw new RuntimeException(sprintf(
-                'Cannot update irmao with identifier %d; does not exist',
-                $id
-            ));
-        }
-
-        return $this->updateSaida($irmao);
+        return $this->updateSaida($saida);
     }
 
     public function insertSaida(Saida $saida)
