@@ -30,6 +30,7 @@
 
 $app->route('/login', App\Action\LoginAction::class, ['GET', 'POST'], 'login');
 $app->get('/logout', App\Action\LogoutAction::class, 'logout');
+$app->route('/usuario/cadastrar', App\Action\UsuarioCadastrarAction::class, ['GET', 'POST'], 'usuario.cadastrar');
 $app->get('/', App\Action\HomePageAction::class, 'home');
 $app->get('/api/ping', App\Action\PingAction::class, 'api.ping');
 $app->get('/irmaos', [

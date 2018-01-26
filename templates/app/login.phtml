@@ -1,7 +1,7 @@
 <?php $this->layout('layout::default', ['title' => 'Home']) ?>
 
 <div class="row">
-	<div class="col-md-offset-4 col-md-4">
+	<div class="col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
 <?php if (isset($error)): ?>
 		<div class="panel panel-danger">
 			<div class="panel-heading">Erro</div>
@@ -11,27 +11,76 @@
 		</div>
 <?php endif; ?>
 		<div class="panel panel-default">
-			<div class="panel-heading">Login</div>
-			<div class="panel-body">
-				<form class="form-horizontal" action="/login" method="post">
-					<div class="form-group">
-						<label class="col-md-2 control-label">Usuário</label>
-						<div class="col-md-10">
-							<input type="text" class="form-control" name="username" value="<?= isset($username) ? $this->e($username) : '' ?>"/>
+			<div class="panel-heading panel-heading-tabs">
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="<?= empty($tabRegister) ? ' active' : '' ?>">
+						<a href="#form-login" aria-controls="form-login" role="tab" data-toggle="tab">Login</a>
+					</li>
+					<li role="presentation" class="<?= isset($tabRegister) ? 'active' : '' ?>">
+						<a href="#form-register" aria-controls="form-register" role="tab" data-toggle="tab">Cadastrar</a>
+					</li>
+				</ul>
+			</div>
+			<div class="panel-body tab-content">
+				<div class="tab-pane<?= empty($tabRegister) ? ' active' : '' ?>" role="tabpanel" id="form-login">
+					<form class="form-horizontal" action="/login" method="post">
+						<div class="form-group">
+							<label class="col-md-2 control-label">E-mail</label>
+							<div class="col-md-10">
+								<input type="text" class="form-control" name="username" value="<?= isset($username) ? $this->e($username) : '' ?>"/>
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-2 control-label">Senha</label>
-						<div class="col-md-10">
-							<input type="password" class="form-control" name="password"/>
+						<div class="form-group">
+							<label class="col-md-2 control-label">Senha</label>
+							<div class="col-md-10">
+								<input type="password" class="form-control" name="password"/>
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-md-offset-2 col-md-10">
-							<button type="submit">Entrar</button>
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-10">
+								<button type="submit">Entrar</button>
+							</div>
 						</div>
-					</div>
-				</form>
+					</form>
+				</div>
+				<div class="tab-pane<?= isset($tabRegister) ? ' active' : '' ?>" role="tabpanel" id="form-register">
+					<form class="form-horizontal" action="/usuario/cadastrar" method="post">
+						<div class="form-group">
+							<label class="col-md-4 control-label">Nome</label>
+							<div class="col-md-8">
+								<input type="text" class="form-control" name="name" value="<?= isset($register_name) ? $this->e($register_name) : '' ?>"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label">E-mail</label>
+							<div class="col-md-8">
+								<input type="text" class="form-control" name="email" value="<?= isset($register_email) ? $this->e($register_email) : '' ?>"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label">Senha</label>
+							<div class="col-md-8">
+								<input type="password" class="form-control" name="password" value="<?= isset($register_password) ? $this->e($register_password) : '' ?>"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label">Confirme a senha</label>
+							<div class="col-md-8">
+								<input type="password" class="form-control" name="password_confirm"/>
+							</div>
+						</div>
+						<div class="form-group">
+<?php if (isset($register_error)): ?>
+							<div class="alert alert-danger" role="alert">
+								<p><?= $this->e($register_error) ?></p>
+							</div>
+<?php endif; ?>
+							<div class="col-md-offset-4 col-md-8">
+								<button type="submit">Enviar</button>
+							</div>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

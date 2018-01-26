@@ -46,6 +46,7 @@ class ConfigProvider
                 Action\AuthAction::class => Action\AuthActionFactory::class,
                 Action\LoginAction::class => Action\LoginActionFactory::class,
                 Action\LogoutAction::class => Action\LogoutActionFactory::class,
+                Action\UsuarioCadastrarAction::class => Action\UsuarioCadastrarFactory::class,
                 Action\HomePageAction::class => Action\HomePageFactory::class,
                 Action\IrmaosIndexAction::class => Action\IrmaosIndexFactory::class,
                 Action\IrmaosInserirAction::class => Action\IrmaosInserirFactory::class,
@@ -113,6 +114,17 @@ class ConfigProvider
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Model\DesignacaoSaida());
                     return new TableGateway('designacoes_saidas', $dbAdapter, null, $resultSetPrototype);
+                },
+                /* */
+                Model\UsuarioTable::class => function($container) {
+                    $tableGateway = $container->get(Model\UsuarioTableGateway::class);
+                    return new Model\UsuarioTable($tableGateway);
+                },
+                Model\UsuarioTableGateway::class => function ($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Model\Usuario());
+                    return new TableGateway('usuarios', $dbAdapter, null, $resultSetPrototype);
                 },
                 /* */
             ],
