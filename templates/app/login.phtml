@@ -1,7 +1,7 @@
 <?php $this->layout('layout::default', ['title' => 'Home']) ?>
 
 <div class="row">
-	<div class="col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
+	<div class="col-md-offset-3 col-md-6">
 <?php if (isset($error)): ?>
 		<div class="panel panel-danger">
 			<div class="panel-heading">Erro</div>
@@ -44,6 +44,13 @@
 					</form>
 				</div>
 				<div class="tab-pane<?= isset($tabRegister) ? ' active' : '' ?>" role="tabpanel" id="form-register">
+<?php if (!empty($register_success)): ?>
+					<div class="alert alert-success" role="alert">
+						<p><strong>Cadastro realizado com sucesso!</strong></p>
+					</div>
+					<p>O administrador irá verificar seus dados e realizar a liberação de acesso.</p>
+					<p>Você receberá um aviso por e-mail quando isso acontecer.</p>
+<?php else: ?>
 					<form class="form-horizontal" action="/usuario/cadastrar" method="post">
 						<div class="form-group">
 							<label class="col-md-4 control-label">Nome</label>
@@ -80,6 +87,7 @@
 							</div>
 						</div>
 					</form>
+<?php endif; ?>
 				</div>
 			</div>
 		</div>

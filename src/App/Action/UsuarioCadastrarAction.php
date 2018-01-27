@@ -10,6 +10,7 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use Zend\Validator\EmailAddress;
 use \App\Model\Usuario;
 use \App\Model\UsuarioTable;
 
@@ -48,6 +49,8 @@ class UsuarioCadastrarAction implements ServerMiddlewareInterface
         $password_confirm = isset($params['password_confirm']) ? $params['password_confirm'] : null;
 
         $error = null;
+        $register_success = false;
+        $emailValidator = new EmailAddress();
 
         if (empty($name)) {
             // return new HtmlResponse($this->template->render('app::login', [
@@ -58,6 +61,14 @@ class UsuarioCadastrarAction implements ServerMiddlewareInterface
 
         else if (empty($email)) {
             $error = 'O e-mail está vazio!';
+        }
+
+        else if (!$emailValidator->isValid($email)) {
+            $error = 'O endereço de e-mail é inválido!';
+        }
+
+        else if ($userEmail = $this->usuarioTable->getUsuarioByEmail($email)) {
+            $error = 'Já existe um usuário com esse e-mail! ('.$userEmail->usuario_nome.')';
         }
 
         else if (empty($password)) {
@@ -77,7 +88,13 @@ class UsuarioCadastrarAction implements ServerMiddlewareInterface
         }
 
         else {
-            $error = 'Tudo OK! :D';
+            $usuario = new Usuario();
+            $usuario->irmao_id = 0;
+            $usuario->usuario_nome = $name;
+            $usuario->usuario_email = $email;
+            $usuario->usuario_senha = $password;
+            $this->usuarioTable->insertUsuario($usuario);
+            $register_success = true;
         }
 
         // $result = $this->auth->authenticate();
@@ -89,6 +106,7 @@ class UsuarioCadastrarAction implements ServerMiddlewareInterface
             'register_password' => $password,
             // 'register_' => $,
             'register_error' => $error,
+            'register_success' => $register_success,
         ]));
         // }
 

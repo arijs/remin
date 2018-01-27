@@ -78,6 +78,12 @@ class UsuarioTable
         return $row;
     }
 
+    public function getUsuarioByEmail($email)
+    {
+        $rowset = $this->tableGateway->select(['usuario_email' => $email]);
+        return $rowset->current();
+    }
+
     public function saveUsuario(Usuario $usuario)
     {
         $id = (int) $usuario->usuario_id;
@@ -91,6 +97,8 @@ class UsuarioTable
 
     public function insertUsuario(Usuario $usuario)
     {
+        $usuario->usuario_registro = date('Y-m-d H:i:s');
+        $usuario->usuario_autorizado = 0;
         $this->tableGateway->insert($usuario->toArray());
         $usuario->usuario_id = $this->tableGateway->getLastInsertValue();
     }
