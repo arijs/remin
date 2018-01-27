@@ -40,8 +40,8 @@ class Usuario
     public function toArray() {
       $registro = $this->usuario_registro;
       $autorizado = $this->usuario_autorizado;
-      $registro   = !empty($registro  ['original']) ? $registro  ['original'] : null;
-      $autorizado = !empty($autorizado['original']) ? $autorizado['original'] : null;
+      $registro   = !empty($registro  ['original']) ? $registro  ['original'] : 0;
+      $autorizado = !empty($autorizado['original']) ? $autorizado['original'] : 0;
       $data = [
           'usuario_id' => $this->usuario_id,
           'irmao_id' => $this->irmao_id,

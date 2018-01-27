@@ -97,8 +97,8 @@ class UsuarioTable
 
     public function insertUsuario(Usuario $usuario)
     {
-        $usuario->usuario_registro = date('Y-m-d H:i:s');
-        $usuario->usuario_autorizado = 0;
+        $usuario->usuario_registro = ['original' => date('Y-m-d H:i:s')];
+        $usuario->usuario_autorizado = ['original' => 0];
         $this->tableGateway->insert($usuario->toArray());
         $usuario->usuario_id = $this->tableGateway->getLastInsertValue();
     }
