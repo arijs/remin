@@ -2,7 +2,10 @@
 $this->layout('layout::default', [
     'title' => 'Irmãos - Designações',
     'authentication' => isset($authentication) ? $authentication : null,
-])
+]);
+$a = isset($authentication) ? $authentication : [];
+$admin = isset($a['admin']) ? $a['admin'] : false;
+$usuario = isset($a['usuario']) ? $a['usuario'] : null;
 ?>
 
 <div class="row">
@@ -21,14 +24,20 @@ $this->layout('layout::default', [
 	$esc_nome = $this->e($irmao->irmao_nome);
 ?>
 <div class="well well-sm">
+<?php if ($admin): ?>
 	<a href="/irmaos/editar/<?= $esc_id ?>">(editar)</a>
 	<a href="/irmaos/remover/<?= $esc_id ?>">(remover)</a>
 	(designações)
 	(<?= $esc_id ?>) <?= $esc_nome ?>
+<?php else: ?>
+	(designações)
+	<?= $esc_nome ?>
+<?php endif; ?>
 </div>
 
 <?php $this->insert('forms::designacao-agrupado', [
 	'list' => $list,
+	'admin' => $admin,
 ]) ?>
 
 <p><a href="/irmaos">Voltar para a lista</a></p>

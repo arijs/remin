@@ -2,11 +2,20 @@
 $this->layout('layout::default', [
 	'title' => 'Designações',
 	'authentication' => isset($authentication) ? $authentication : null,
-])
+]);
+$a = isset($authentication) ? $authentication : [];
+$admin = isset($a['admin']) ? $a['admin'] : false;
+$usuario = isset($a['usuario']) ? $a['usuario'] : null;
 ?>
 <?php $this->start('stylesheets') ?>
 <?php $this->insert('forms::designacoes-styles') ?>
 <?php $this->stop() ?>
+
+<?php /*if (!empty($usuario)): ?>
+<pre>
+<?php print_r($usuario) ?>
+</pre>
+<?php endif;*/ ?>
 
 <div class="row">
 	<div class="col-md-3">
@@ -24,9 +33,12 @@ $this->layout('layout::default', [
 	Designações: <?= $this->e($result['count']) ?>
 </p>
 
-<?php $this->insert('forms::designacao-agrupado', [
+<?php
+$this->insert('forms::designacao-agrupado', [
 	'list' => $list,
-]) ?>
+	'admin' => $admin,
+]);
+?>
 
 <?php /*
 <ul>
@@ -38,11 +50,15 @@ foreach ($list as $designacao) {
 </ul>
 */ ?>
 
-<?php $this->insert('forms::designacoes', [
-	'numero_territorios' => $numero_territorios,
-	'irmaos' => $irmaos,
-	'saidas' => $saidas,
-]) ?>
+<?php
+if ($admin) {
+	$this->insert('forms::designacoes', [
+		'numero_territorios' => $numero_territorios,
+		'irmaos' => $irmaos,
+		'saidas' => $saidas,
+	]);
+}
+?>
 
 <?php $this->start('javascript') ?>
 <?php $this->insert('forms::designacoes-scripts') ?>

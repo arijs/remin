@@ -11,21 +11,26 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use \App\Model\Usuario;
+use \App\Model\UsuarioTable;
 
 class LoginAction implements ServerMiddlewareInterface
 {
+    private $template;
     private $auth;
     private $authAdapter;
-    private $template;
+    private $usuarioTable;
 
     public function __construct(
         TemplateRendererInterface $template,
         AuthenticationService $auth,
-        MyAuthAdapter $authAdapter
+        MyAuthAdapter $authAdapter,
+        UsuarioTable $usuarioTable
     ) {
-        $this->template    = $template;
-        $this->auth        = $auth;
-        $this->authAdapter = $authAdapter;
+        $this->template     = $template;
+        $this->auth         = $auth;
+        $this->authAdapter  = $authAdapter;
+        $this->usuarioTable = $usuarioTable;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
@@ -59,9 +64,15 @@ class LoginAction implements ServerMiddlewareInterface
 
         $result = $this->auth->authenticate();
         if (!$result->isValid()) {
+            $msgs = $result->getMessages();
+            if (empty($msgs)) {
+                $msgs = 'Usuario ou senha inválidos';
+            } else {
+                $msgs = implode(' / ', $msgs);
+            }
             return new HtmlResponse($this->template->render('app::login', [
                 'username' => $params['username'],
-                'error'    => 'The credentials provided are not valid',
+                'error'    => $msgs,
             ]));
         }
 

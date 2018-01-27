@@ -4,10 +4,11 @@
 
 namespace App\Action;
 
-use \App\MyAuthAdapter;
 use Interop\Container\ContainerInterface;
 use Zend\Authentication\AuthenticationService;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use \App\MyAuthAdapter;
+use \App\Model\UsuarioTable;
 
 class LoginActionFactory
 {
@@ -16,7 +17,8 @@ class LoginActionFactory
         return new LoginAction(
             $container->get(TemplateRendererInterface::class),
             $container->get(AuthenticationService::class),
-            $container->get(MyAuthAdapter::class)
+            $container->get(MyAuthAdapter::class),
+            $container->get(UsuarioTable::class)
         );
     }
 }

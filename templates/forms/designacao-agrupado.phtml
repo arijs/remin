@@ -25,11 +25,13 @@
 	$esc_comentario = $this->e($desig->designacao_comentario);
 ?>
 				<li class="list-group-item">
+<?php if (isset($admin) && $admin): ?>
 				<p>
 					<a href="/designacoes/editar/<?= $esc_id ?>">(editar)</a>
 					<a href="/designacoes/remover/<?= $esc_id ?>">(remover)</a>
 					(<?= $esc_id ?>)
 				</p>
+<?php endif; ?>
 				<p class="lead">
 <?php if (empty($esc_entrega)): ?>
 					<span class="label label-warning">Sem data</span>

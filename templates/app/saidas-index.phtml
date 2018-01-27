@@ -2,7 +2,10 @@
 $this->layout('layout::default', [
     'title' => 'Saídas',
     'authentication' => isset($authentication) ? $authentication : null,
-])
+]);
+$a = isset($authentication) ? $authentication : [];
+$admin = isset($a['admin']) ? $a['admin'] : false;
+$usuario = isset($a['usuario']) ? $a['usuario'] : null;
 ?>
 
 <div class="row">
@@ -24,14 +27,20 @@ $this->layout('layout::default', [
 	$esc_nome = $this->e($saida->saida_nome);
 ?>
 	<li>
+<?php if ($admin): ?>
 		<a href="/saidas/editar/<?= $esc_id ?>">(editar)</a>
 		<a href="/saidas/remover/<?= $esc_id ?>">(remover)</a>
 		(<?= $esc_id ?>) <?= $esc_nome ?>
+<?php else: ?>
+		<?= $esc_nome ?>
+<?php endif; ?>
 	</li>
 <?php endforeach; ?>
 </ul>
 
+<?php if ($admin): ?>
 <form action="/saidas/inserir" method="post">
 	<input type="text" name="nome" />
 	<button type="submit">inserir</button>
 </form>
+<?php endif; ?>

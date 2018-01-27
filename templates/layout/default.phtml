@@ -1,3 +1,11 @@
+<?php
+$a = isset($authentication) ? $authentication : [];
+$admin = isset($a['admin']) ? $a['admin'] : false;
+$usuario = isset($a['usuario']) ? $a['usuario'] : null;
+$usuario_nome = (empty($usuario) || empty($usuario->usuario_nome))
+    ? ( !empty($a['username']) ? $a['username'] : '' )
+    : $usuario->usuario_nome;
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,7 +67,7 @@
                     </li>
 <?php else: ?>
                     <li>
-                        <a href="/logout"><?= $this->e($authentication['username']) ?> (logout)</a>
+                        <a href="/logout"><?= $this->e($usuario_nome) ?> (logout)</a>
                     </li>
 <?php endif; ?>
                 </ul>
