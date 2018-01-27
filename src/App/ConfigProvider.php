@@ -127,6 +127,17 @@ class ConfigProvider
                     return new TableGateway('usuarios', $dbAdapter, null, $resultSetPrototype);
                 },
                 /* */
+                Model\UsuarioAcessoTable::class => function($container) {
+                    $tableGateway = $container->get(Model\UsuarioAcessoTableGateway::class);
+                    return new Model\UsuarioAcessoTable($tableGateway);
+                },
+                Model\UsuarioAcessoTableGateway::class => function ($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Model\UsuarioAcesso());
+                    return new TableGateway('usuarios_acessos', $dbAdapter, null, $resultSetPrototype);
+                },
+                /* */
             ],
         ];
     }

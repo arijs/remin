@@ -2,7 +2,11 @@
 $this->layout('layout::default', [
     'title' => 'Home',
     'authentication' => isset($authentication) ? $authentication : null,
-])
+]);
+$a = isset($authentication) ? $authentication : [];
+$admin = isset($a['admin']) ? $a['admin'] : false;
+$usuario = isset($a['usuario']) ? $a['usuario'] : null;
+$acesso = isset($a['acesso']) ? $a['acesso'] : null;
 ?>
 
 <div class="jumbotron">
@@ -16,6 +20,12 @@ $this->layout('layout::default', [
         Expressive builds on zend-stratigility to provide a minimalist PSR-7 middleware framework for PHP.
     </p>
 </div>
+
+<?php /*if (!empty($acesso)): ?>
+<pre>
+<?php print_r($acesso) ?>
+</pre>
+<?php endif;*/ ?>
 
 <div class="row">
     <div class="col-md-3">

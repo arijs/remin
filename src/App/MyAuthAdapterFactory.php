@@ -6,6 +6,7 @@ namespace App;
 use Interop\Container\ContainerInterface;
 use Zend\Authentication\AuthenticationService;
 use \App\Model\UsuarioTable;
+use \App\Model\UsuarioAcessoTable;
 
 class MyAuthAdapterFactory
 {
@@ -15,7 +16,8 @@ class MyAuthAdapterFactory
         $config = $container->get('config');
         return new MyAuthAdapter(
             $config['remin']['admin'],
-            $container->get(UsuarioTable::class)
+            $container->get(UsuarioTable::class),
+            $container->get(UsuarioAcessoTable::class)
         );
     }
 }

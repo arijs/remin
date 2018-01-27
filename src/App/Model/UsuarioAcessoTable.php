@@ -54,20 +54,44 @@ class UsuarioAcessoTable
         return $row;
     }
 
-    public function insertUsuarioAcesso(UsuarioAcesso $usuarioAcesso)
+    public function getAcessoDeHoje($id)
     {
-        $this->tableGateway->insert($usuarioAcesso->toArray());
+        $id = (int) $id;
+        $rowset = $this->tableGateway->select([
+            'usuario_id' => $id,
+            'acesso_data' => new \Zend\Db\Sql\Expression('CURRENT_DATE()'),
+        ]);
+        return $rowset->current();
     }
 
-    public function updateUsuarioAcesso(UsuarioAcesso $usuarioAcesso)
+    public function criarAcessoDeHoje($id)
     {
+        $a = [
+            'usuario_id' => (int) $id,
+            'acesso_contagem' => 1,
+            'acesso_data' => new \Zend\Db\Sql\Expression('CURRENT_DATE()'),
+            'acesso_hora_inicial' => new \Zend\Db\Sql\Expression('CURRENT_TIME()'),
+            'acesso_hora_final' => new \Zend\Db\Sql\Expression('CURRENT_TIME()'),
+        ];
+        $this->tableGateway->insert($a);
+        return $this->getAcessoDeHoje($id);
+    }
+    // criarAcessoDeHoje
+
+    public function updateAcessoDeHoje(UsuarioAcesso $usuarioAcesso)
+    {
+        $id = (int) $usuarioAcesso->usuario_id;
         $this->tableGateway->update(
-            $usuarioAcesso->toArray(),
             [
-                'usuario_id' => (int) $usuarioAcesso->usuario_id,
-                'acesso_data' => $usuarioAcesso->acesso_data,
+                'acesso_contagem' => new \Zend\Db\Sql\Expression('acesso_contagem + 1'),
+                'acesso_hora_final' => new \Zend\Db\Sql\Expression('CURRENT_TIME()'),
+            ],
+            [
+                'usuario_id' => $id,
+                'acesso_data' => new \Zend\Db\Sql\Expression('CURRENT_DATE()'),
             ]
         );
+        return $this->getAcessoDeHoje($id);
     }
 
     public function deleteUsuario($id)

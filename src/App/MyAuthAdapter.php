@@ -7,6 +7,8 @@ use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
 use \App\Model\Usuario;
 use \App\Model\UsuarioTable;
+use \App\Model\UsuarioAcesso;
+use \App\Model\UsuarioAcessoTable;
 
 class MyAuthAdapter implements AdapterInterface
 {
@@ -14,14 +16,17 @@ class MyAuthAdapter implements AdapterInterface
     private $username;
     private $admin;
     private $usuarioTable;
+    private $usuarioAcessoTable;
 
     public function __construct(
         $admin,
-        UsuarioTable $usuarioTable
+        UsuarioTable $usuarioTable,
+        UsuarioAcessoTable $usuarioAcessoTable
     ) {
         // Likely assign dependencies to properties
         $this->admin = $admin;
         $this->usuarioTable = $usuarioTable;
+        $this->usuarioAcessoTable = $usuarioAcessoTable;
     }
 
     public function setPassword(string $password) : void
@@ -55,6 +60,7 @@ class MyAuthAdapter implements AdapterInterface
             return new Result(Result::SUCCESS, [
                 'username' => $u,
                 'usuario' => null,
+                'acesso' => null,
                 'admin' => true,
             ]);
         }
@@ -69,9 +75,16 @@ class MyAuthAdapter implements AdapterInterface
                         'Sua conta ainda não foi autorizada pelo administrador!',
                     ]);
                 }
+                $acesso = $this->usuarioAcessoTable->getAcessoDeHoje($usuario->usuario_id);
+                if (empty($acesso)) {
+                    $acesso = $this->usuarioAcessoTable->criarAcessoDeHoje($usuario->usuario_id);
+                } else {
+                    $acesso = $this->usuarioAcessoTable->updateAcessoDeHoje($acesso);
+                }
                 return new Result(Result::SUCCESS, [
                     'username' => $u,
                     'usuario' => $usuario,
+                    'acesso' => $acesso,
                     'admin' => false
                 ]);
             }
