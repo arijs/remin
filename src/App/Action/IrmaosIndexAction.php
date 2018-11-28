@@ -37,7 +37,7 @@ class IrmaosIndexAction implements ServerMiddlewareInterface
         $query  = $request->getQueryParams();
         $page = isset($query['page']) ? intval($query['page']) : 1;
         $page = $page < 1 ? 1 : $page;
-        $rowsPage = 20;
+        $rowsPage = 50;
         $offset = ($page - 1) * $rowsPage;
         $count = $this->irmaoTable->countAll();
         $list = $this->irmaoTable->fetchOffsetLimit($offset, $rowsPage);

@@ -15,7 +15,7 @@ class MyAuthAdapterFactory
         // Retrieve any dependencies from the container when creating the instance
         $config = $container->get('config');
         return new MyAuthAdapter(
-            $config['remin']['admin'],
+            $config['tervel']['admin'],
             $container->get(UsuarioTable::class),
             $container->get(UsuarioAcessoTable::class)
         );

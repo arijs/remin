@@ -1,0 +1,11 @@
+<?php
+
+return [
+    // 'tervel' => [
+    //     'numero_territorios' => 36,
+    //     'admin' => [
+    //         'user' => 'rhengles',
+    //         'pass' => 'senha_exemplo'
+    //     ]
+    // ]
+];

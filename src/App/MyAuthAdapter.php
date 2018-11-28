@@ -55,6 +55,7 @@ class MyAuthAdapter implements AdapterInterface
         $p = $this->password;
         $au = $this->admin['user'];
         $ap = $this->admin['pass'];
+        $adminIds = empty($this->admin['db_user_ids']) ? [] : $this->admin['db_user_ids'];
 
         if ($u === $au && $p === $ap) {
             return new Result(Result::SUCCESS, [
@@ -81,11 +82,13 @@ class MyAuthAdapter implements AdapterInterface
                 } else {
                     $acesso = $this->usuarioAcessoTable->updateAcessoDeHoje($acesso);
                 }
+                $isAdmin = empty($adminIds[$usuario->usuario_id]) ? null : $adminIds[$usuario->usuario_id];
+                $isAdmin = !empty($isAdmin) && $u === $isAdmin;
                 return new Result(Result::SUCCESS, [
                     'username' => $u,
                     'usuario' => $usuario,
                     'acesso' => $acesso,
-                    'admin' => false
+                    'admin' => $isAdmin,
                 ]);
             }
         }
